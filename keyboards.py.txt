@@ -1,0 +1,78 @@
+"""
+Inline and Reply keyboard builders for professional navigation.
+"""
+from telebot.types import InlineKeyboardMarkup, InlineKeyboardButton
+
+def main_menu_keyboard(is_admin: bool = False) -> InlineKeyboardMarkup:
+    """Creates the primary interactive inline menu."""
+    markup = InlineKeyboardMarkup(row_width=2)
+    
+    btn_services = InlineKeyboardButton("💼 Services", callback_data="menu_services")
+    btn_profile = InlineKeyboardButton("👤 My Profile", callback_data="menu_profile")
+    btn_stats = InlineKeyboardButton("📊 Bot Stats", callback_data="menu_stats")
+    btn_faq = InlineKeyboardButton("❓ Help & FAQ", callback_data="menu_faq")
+    btn_support = InlineKeyboardButton("📩 Contact Support", callback_data="menu_feedback")
+    
+    markup.add(btn_services, btn_profile)
+    markup.add(btn_stats, btn_faq)
+    markup.add(btn_support)
+    
+    if is_admin:
+        btn_admin = InlineKeyboardButton("🛡️ Admin Panel", callback_data="admin_panel")
+        markup.add(btn_admin)
+        
+    return markup
+
+def back_to_main_keyboard() -> InlineKeyboardMarkup:
+    """Return to main menu button."""
+    markup = InlineKeyboardMarkup()
+    markup.add(InlineKeyboardButton("⬅️ Back to Main Menu", callback_data="menu_main"))
+    return markup
+
+def services_keyboard() -> InlineKeyboardMarkup:
+    """Services sub-menu."""
+    markup = InlineKeyboardMarkup(row_width=1)
+    markup.add(
+        InlineKeyboardButton("⚡ Fast API Integration", callback_data="service_api"),
+        InlineKeyboardButton("🔒 Security & Auth Audits", callback_data="service_security"),
+        InlineKeyboardButton("☁️ Cloud Deployments", callback_data="service_cloud"),
+        InlineKeyboardButton("⬅️ Back", callback_data="menu_main")
+    )
+    return markup
+
+def admin_panel_keyboard() -> InlineKeyboardMarkup:
+    """Admin controls inline dashboard."""
+    markup = InlineKeyboardMarkup(row_width=2)
+    markup.add(
+        InlineKeyboardButton("👥 User List", callback_data="admin_users"),
+        InlineKeyboardButton("📈 Analytics", callback_data="admin_analytics")
+    )
+    markup.add(
+        InlineKeyboardButton("📢 Broadcast", callback_data="admin_broadcast_prompt"),
+        InlineKeyboardButton("🚫 Ban/Unban Info", callback_data="admin_ban_help")
+    )
+    markup.add(
+        InlineKeyboardButton("⬅️ Back to Main Menu", callback_data="menu_main")
+    )
+    return markup
+
+def admin_user_list_keyboard(page: int = 0, total_pages: int = 1) -> InlineKeyboardMarkup:
+    """Pagination for admin user list."""
+    markup = InlineKeyboardMarkup(row_width=3)
+    nav_buttons = []
+    
+    if page > 0:
+        nav_buttons.append(InlineKeyboardButton("◀️ Prev", callback_data=f"admin_users_page_{page-1}"))
+    else:
+        nav_buttons.append(InlineKeyboardButton("▫️", callback_data="noop"))
+        
+    nav_buttons.append(InlineKeyboardButton(f"{page+1}/{total_pages}", callback_data="noop"))
+    
+    if page < total_pages - 1:
+        nav_buttons.append(InlineKeyboardButton("Next ▶️", callback_data=f"admin_users_page_{page+1}"))
+    else:
+        nav_buttons.append(InlineKeyboardButton("▫️", callback_data="noop"))
+        
+    markup.add(*nav_buttons)
+    markup.add(InlineKeyboardButton("⬅️ Back to Admin Panel", callback_data="admin_panel"))
+    return markup
