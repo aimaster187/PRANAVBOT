@@ -1,0 +1,27 @@
+"""
+Configuration module for the Telegram Bot.
+Supports environment variables or fallback configuration.
+"""
+import os
+from typing import List
+
+# Bot Token from @BotFather
+BOT_TOKEN: str = os.getenv("BOT_TOKEN", "YOUR_BOT_TOKEN_HERE")
+
+# List of Telegram User IDs who have admin privileges
+ADMIN_IDS_RAW = os.getenv("ADMIN_IDS", "123456789")
+ADMIN_IDS: List[int] = [
+    int(x.strip()) for x in ADMIN_IDS_RAW.split(",") if x.strip().isdigit()
+]
+
+# Database Path
+DB_NAME: str = os.getenv("DB_NAME", "bot_database.db")
+
+# Bot Branding & Details
+BOT_NAME: str = "ProAssist Bot"
+BOT_VERSION: str = "2.1.0"
+SUPPORT_USERNAME: str = "@YourSupportHandle"
+
+# Logging configuration
+LOG_FILE: str = "bot_activity.log"
+LOG_LEVEL: str = os.getenv("LOG_LEVEL", "INFO")
